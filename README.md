@@ -140,17 +140,7 @@ Dapat Ditanggapi oleh Admin
 * **Akuntabilitas**: Setiap tugas memiliki pemilik dan status jelas.
 * **Komunikasi Terbuka**: Pengumuman dan laporan memperkuat kolaborasi.
 
----
 
-## 🛠️ 6. Teknologi yang Direkomendasikan (Opsional)
-
-* **Frontend**: React.js / Vue.js
-* **Backend**: Node.js (Express) / Laravel / Django
-* **Database**: PostgreSQL / MySQL
-* **Autentikasi**: JWT / Session-based
-* **File Storage**: Cloud (AWS S3, Firebase Storage) atau lokal
-
----
 
 📂 **Dokumen ini dapat digunakan sebagai basis pengembangan, proposal sistem, atau spesifikasi fungsional.**
 Jika diperlukan, tambahan yang bisa dibuat:
