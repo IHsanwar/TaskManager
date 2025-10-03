@@ -15,12 +15,12 @@ require __DIR__.'/auth.php';
 // Route terproteksi
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     // Task: hanya admin yang bisa kelola
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('tasks', TaskController::class);
         Route::post('tasks/{task}/assign', [TaskController::class, 'assign'])->name('tasks.assign');
         Route::post('tasks/{task}/verify', [TaskController::class, 'verify'])->name('tasks.verify');
+        Route::get('/list-user',[DashboardController::class, 'userList'])->name('list-user');
     });
 
     // User: selesaikan tugas
@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     // Announcement: admin only
     Route::middleware(['role:admin'])->resource('announcements', AnnouncementController::class);
 
-    // Public Report: semua role
+    
     Route::resource('reports', PublicReportController::class);
     
     // profile

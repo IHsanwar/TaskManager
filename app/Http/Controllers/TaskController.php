@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -65,4 +66,16 @@ public function complete(Request $request, Task $task)
 
     return back()->with('success', 'Tugas berhasil diselesaikan!');
 }
+public function destroy(Task $task)
+{
+    $task->assignedUsers()->detach();
+    $task->delete();
+
+    return back()->with('success', 'Tugas berhasil dihapus!');
+    
+}
+ public function show(Task $task){
+    $task->load('creator', 'assignedUsers');
+    return view('tasks.show', compact('task'));
+ }
 }

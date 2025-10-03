@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Announcement;
 use App\Models\PublicReport;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -26,4 +27,9 @@ class DashboardController extends Controller
         return view('dashboard.user', compact('assignedTasks', 'announcements', 'reports'));
     }
 }
+    public function userList()
+    {
+        $users = User::all();
+        return view('dashboard.user_list', compact('users'));
+    }
 }

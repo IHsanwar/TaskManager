@@ -20,7 +20,7 @@
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-700">Detail</h3>
-                        <p><strong>Deadline:</strong> {{ $task->deadline->format('d M Y') }}</p>
+                        <p><strong>Deadline:</strong> {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}</p>
                         <p><strong>Prioritas:</strong> 
                             <span class="px-2 py-1 rounded text-white text-xs
                                 @if($task->priority === 'high') bg-red-500
@@ -53,7 +53,8 @@
 
                                 @if($pivot->is_completed)
                                     <div class="mt-2 text-sm text-gray-700">
-                                        <p><strong>Selesai pada:</strong> {{ $pivot->completed_at->format('d M Y H:i') }}</p>
+                                        
+                                        <p><strong>Selesai pada:</strong> {{ \Carbon\Carbon::parse($task->completed_at)->format('d M Y') }}</p>
                                         
                                         @if($pivot->notes)
                                             <p><strong>Catatan:</strong> {{ $pivot->notes }}</p>
@@ -79,7 +80,7 @@
                                                 </button>
                                             </form>
                                         @elseif($pivot->verified_at)
-                                            <p class="mt-2 text-sm text-green-700">✅ Sudah diverifikasi</p>
+                                            <p class="mt-2 text-sm text-green-700"><i class="fa-solid fa-circle-check"></i> Sudah diverifikasi</p>
                                         @endif
                                     </div>
                                 @else

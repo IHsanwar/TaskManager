@@ -23,7 +23,7 @@
     <div class="bg-white p-4 rounded shadow mb-4">
         <h4 class="font-bold">{{ $task->title }}</h4>
         <p>{{ Str::limit($task->description, 100) }}</p>
-        <p><strong>Deadline:</strong> {{ $task->deadline->format('d M Y') }}</p>
+        <p><strong>Deadline:</strong> {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}</p>
         <p><strong>Prioritas:</strong> 
             <span class="px-2 py-1 rounded text-white 
                 @if($task->priority === 'high') bg-red-500
@@ -38,7 +38,7 @@
         @endphp
 
         @if($pivot && $pivot->is_completed)
-            <p class="text-green-600 mt-2">✅ Selesai pada {{ $pivot->completed_at->format('d M Y') }}</p>
+            <p class="text-green-600 mt-2">✅ Selesai pada {{ \Carbon\Carbon::parse($pivot->completed_at)->format('d M Y') }}</p>
             @if($pivot->attachment_path)
                 <a href="{{ asset('storage/' . $pivot->attachment_path) }}" target="_blank" class="text-blue-600">Lihat Lampiran</a>
             @endif
