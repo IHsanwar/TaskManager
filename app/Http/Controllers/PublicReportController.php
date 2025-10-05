@@ -38,4 +38,34 @@ class PublicReportController extends Controller
 
         return redirect()->route('reports.index')->with('success', 'Report submitted successfully.');
     }
+    public function edit(PublicReport $report)
+    {
+        return view('public_reports.edit', compact('report'));
+    }
+    public function update(Request $request, PublicReport $report)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'type' => 'nullable|string|max:2048',
+        ]);
+
+        $report->title = $request->title;
+        $report->content = $request->content;
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public_reports', 'public');
+            $report->image_path = $path;
+        }
+
+        $report->save();
+
+        return redirect()->route('reports.index')->with('success', 'Report updated successfully.');
+    }
+
+    public function destroy(PublicReport $report)
+    {
+        $report->delete();
+        return redirect()->route('reports.index')->with('success', 'Report deleted successfully.');
+    }
 }

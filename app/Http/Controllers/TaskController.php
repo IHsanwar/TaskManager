@@ -66,16 +66,21 @@ public function complete(Request $request, Task $task)
 
     return back()->with('success', 'Tugas berhasil diselesaikan!');
 }
-public function destroy(Task $task)
-{
-    $task->assignedUsers()->detach();
-    $task->delete();
+    public function destroy(Task $task)
+    {
+        $task->assignedUsers()->detach();
+        $task->delete();
+        $deleteFile = public_path('storage/' . $task->attachment_path);
+        if (file_exists($deleteFile) && $task->attachment_path) {
+            unlink($deleteFile);
+        }
+        
 
-    return back()->with('success', 'Tugas berhasil dihapus!');
-    
-}
- public function show(Task $task){
-    $task->load('creator', 'assignedUsers');
-    return view('tasks.show', compact('task'));
- }
+        return back()->with('success', 'Tugas berhasil dihapus!');
+        
+    }
+    public function show(Task $task){
+        $task->load('creator', 'assignedUsers');
+        return view('tasks.show', compact('task'));
+    }
 }
