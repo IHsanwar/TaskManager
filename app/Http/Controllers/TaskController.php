@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
-
+use App\Models\TaskUser;
 class TaskController extends Controller
 {
     // app/Http/Controllers/TaskController.php
@@ -45,6 +45,23 @@ public function store(Request $request)
     return redirect()->route('tasks.index')->with('success', 'Tugas berhasil dibuat!');
 }
 
+        public function verify(Request $request, Task $task)
+    {
+        // misal admin memverifikasi user_id tertentu dari form
+        $userId = $request->input('user_id'); 
+
+        $taskuser = TaskUser::where('task_id', $task->id)
+                            ->where('user_id', $userId)
+                            ->firstOrFail();
+
+        $taskuser->is_verified = true;
+        $taskuser->verified_at = now();
+        $taskuser->save();
+
+        return back()->with('success', 'Tugas user berhasil diverifikasi oleh admin!');
+    }
+
+
 public function complete(Request $request, Task $task)
 {
     $request->validate([
@@ -66,21 +83,30 @@ public function complete(Request $request, Task $task)
 
     return back()->with('success', 'Tugas berhasil diselesaikan!');
 }
-    public function destroy(Task $task)
-    {
-        $task->assignedUsers()->detach();
-        $task->delete();
-        $deleteFile = public_path('storage/' . $task->attachment_path);
-        if (file_exists($deleteFile) && $task->attachment_path) {
-            unlink($deleteFile);
-        }
-        
+   public function destroy(Task $task)
+{
+    // Hapus semua file lampiran dari setiap user di pivot table
+    foreach ($task->assignedUsers as $user) {
+        $pivot = $user->pivot;
 
-        return back()->with('success', 'Tugas berhasil dihapus!');
-        
+        if ($pivot->attachment_path) {
+            $filePath = storage_path('app/public/' . $pivot->attachment_path);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
     }
-    public function show(Task $task){
-        $task->load('creator', 'assignedUsers');
+
+    // Hapus relasi dan task
+    $task->assignedUsers()->detach();
+    $task->delete();
+
+    return back()->with('success', 'Tugas dan semua lampiran berhasil dihapus!');
+}
+
+    public function show(Task $task)
+    {
+        $task->load(['assignedUsers', 'creator']);
         return view('tasks.show', compact('task'));
     }
 }

@@ -8,9 +8,14 @@
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800">{{ $task->title }}</h2>
-                        <p class="text-sm text-gray-500">Dibuat oleh: {{ $task->creator->name }} pada {{ $task->created_at->format('d M Y') }}</p>
+                        <p class="text-sm text-gray-500">
+                            Dibuat oleh: {{ $task->creator->name }} 
+                            pada {{ $task->created_at->format('d M Y') }}
+                        </p>
                     </div>
-                    <a href="{{ route('tasks.index') }}" class="text-blue-600 hover:underline">&larr; Kembali ke Daftar</a>
+                    <a href="{{ route('tasks.index') }}" class="text-blue-600 hover:underline">
+                        &larr; Kembali ke Daftar
+                    </a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -44,6 +49,7 @@
                             <div class="border border-gray-200 rounded-lg p-4">
                                 <div class="flex justify-between">
                                     <h4 class="font-medium">{{ $user->name }}</h4>
+                                    
                                     @if($pivot->is_completed)
                                         <span class="text-green-600 font-medium">✅ Selesai</span>
                                     @else
@@ -53,8 +59,9 @@
 
                                 @if($pivot->is_completed)
                                     <div class="mt-2 text-sm text-gray-700">
-                                        
-                                        <p><strong>Selesai pada:</strong> {{ \Carbon\Carbon::parse($task->completed_at)->format('d M Y') }}</p>
+                                        <p><strong>Selesai pada:</strong> 
+                                            {{ \Carbon\Carbon::parse($pivot->completed_at)->format('d M Y H:i') }}
+                                        </p>
                                         
                                         @if($pivot->notes)
                                             <p><strong>Catatan:</strong> {{ $pivot->notes }}</p>
@@ -71,16 +78,21 @@
                                         @endif
 
                                         <!-- Form Verifikasi (Admin Only) -->
-                                        @if(auth()->user()->role === 'admin' && !$pivot->verified_at)
-                                            <form action="{{ route('tasks.verify', $task) }}" method="POST" class="mt-3">
-                                                @csrf
-                                                <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
-                                                    Verifikasi Hasil
-                                                </button>
-                                            </form>
-                                        @elseif($pivot->verified_at)
-                                            <p class="mt-2 text-sm text-green-700"><i class="fa-solid fa-circle-check"></i> Sudah diverifikasi</p>
+                                        @if(auth()->user()->role === 'admin')
+                                            @if(!$pivot->is_verified)
+                                                <p class="text-sm text-gray-500 mt-2">Menunggu verifikasi...</p>
+                                                <form action="{{ route('tasks.verify', $task) }}" method="POST" class="mt-3">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                                        Verifikasi Hasil
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <p class="mt-2 text-sm text-green-700">
+                                                    ✅ Sudah diverifikasi pada {{ \Carbon\Carbon::parse($pivot->verified_at)->format('d M Y H:i') }}
+                                                </p>
+                                            @endif
                                         @endif
                                     </div>
                                 @else

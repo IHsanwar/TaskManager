@@ -16,8 +16,9 @@ class Task extends Model
     public function assignedUsers()
     {
         return $this->belongsToMany(User::class, 'task_user')
-                    ->withPivot('is_completed', 'notes', 'attachment_path', 'completed_at')
-                    ->withTimestamps();
+            ->withPivot('is_completed', 'notes', 'attachment_path', 'completed_at', 'is_verified', 'verified_at')
+            ->withTimestamps();
     }
+
     use Hasfactory;
 }

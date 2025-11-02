@@ -22,7 +22,7 @@
                         <td class="px-4 py-2">
                             <span class="px-2 py-1 rounded text-white text-xs
                                 @if($user->role === 'admin') bg-red-600
-                                @elseif($user->role === 'user') bg-red-600
+                                @elseif($user->role === 'user') bg-blue-600
                                 @else bg-gray-600 @endif">
                                 {{ ucfirst($user->role) }}
                             </span>
